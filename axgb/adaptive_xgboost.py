@@ -15,7 +15,6 @@ fit into the "MiniBatchClassifier" class instead of "ClassifierMixin" and some
 comments added for self-clarity. 
 
 """
-
 class AdaptiveXGBoostClassifier(MiniBatchClassifier):
     _PUSH_STRATEGY = 'push'
     _REPLACE_STRATEGY = 'replace'
@@ -34,7 +33,7 @@ class AdaptiveXGBoostClassifier(MiniBatchClassifier):
 
         Parameters
         ----------
-        n_estimators: int (default=5)
+        n_estimators: int (default=30)
             The number of estimators in the ensemble.
 
         learning_rate:
@@ -231,14 +230,14 @@ class AdaptiveXGBoostClassifier(MiniBatchClassifier):
         self._first_run = True
         self._configure()
 
-    def learn_one(self, x, y):
-        x = row_convert(x)
-        self._learn(x, y)
-
     def learn_many(self, X, y):
         X = matrix_convert(X)
         for i in range(X.shape[0]):
             self._learn(X[i], y[i])
+
+    def learn_one(self, x, y):
+        x = row_convert(x)
+        self._learn(x, y)
 
     def predict_many(self, X):
         p = self.predict_proba_many(X) 
